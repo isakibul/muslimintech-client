@@ -49,7 +49,7 @@ const MultiStepForm = () => {
     setIsLoading(true);
     console.log('Submitting form data:', { ...formData, ...values });
 
-    axios.post('https://muslimintech-server-pro.onrender.com/api/register', { ...formData, ...values })
+    axios.post('https://muslimintech-server.onrender.com/api/register', { ...formData, ...values })
       .then(response => {
         console.log('Response data:', response.data);
         navigate('/thank-you');
