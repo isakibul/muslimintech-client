@@ -1,0 +1,139 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 600px;
+  background-color: #f5f5f5;
+  padding: 50px;
+  margin: 60px 0;
+}
+
+h1{
+  margin: 0;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+form div{
+  margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="email"],
+select {
+  width: 100%;
+  padding: 5px 0;
+  box-sizing: border-box;
+  font-size: 15px;
+  border-radius: 2px;
+  border: 0;
+  border-bottom: 1px solid #dedcdc;
+  background: transparent;
+  font-family: "Rubik", sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus {
+  outline: none;
+  border-color: #DA22FF;
+  background: transparent;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  background: #DA22FF;
+  background: -webkit-linear-gradient(to right, #9733EE, #DA22FF);
+  background: linear-gradient(to right, #9733EE, #DA22FF);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: "Rubik", sans-serif;
+}
+
+button:hover{
+  background: -webkit-linear-gradient(to right, #DA22FF, #9733EE);
+  background: linear-gradient(to right, #DA22FF, #9733EE);
+  transition: 1s;
+}
+
+.errorMsg {
+  color: red;
+  min-height: 20px;
+  visibility: hidden;
+}
+
+.errorMsg.visible {
+  visibility: visible;
+}
+
+.involvement-div{
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+}
+
+.interest-div{
+  margin-top: 12px;
+}
+
+.buttons-div{
+  display: flex;
+  gap: 3px;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.modal p{
+  font-size: 18px;
+}
+
+.thankPage{
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  form {
+    width: 400px;
+    padding: 40px;
+  }
+  h1{
+    font-size: 25px;
+  }
+
+  .modal p{
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 530px) {
+  form {
+    width: 380px;
+    padding: 40px;
+  }
+  h1{
+    font-size: 25px;
+  }
+  .modal p{
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 430px) {
+  form {
+    width: 300px;
+    padding: 30px;
+  }
+  input[type="text"],
+  select{
+    font-size: 12px;
+  }
+  h1{
+    font-size: 20px;
+  }
+}
