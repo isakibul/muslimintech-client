@@ -5,6 +5,7 @@ import SecondStep from './SecondStep';
 import ThirdStep from './ThirdStep';
 import CustomModal from './CustomModal';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);
@@ -22,6 +23,7 @@ const MultiStepForm = () => {
     specialties: [],
     referral: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const MultiStepForm = () => {
 
   const handleSubmit = (values) => {
     setFormData({ ...formData, ...values });
+    setIsLoading(true);
     console.log('Submitting form data:', { ...formData, ...values });
 
     axios.post('https://muslimintech-server-pro.onrender.com/api/register', { ...formData, ...values })
@@ -53,10 +56,9 @@ const MultiStepForm = () => {
       })
       .catch(error => {
         console.error('There was an error!', error);
+        setIsLoading(false);
       });
   };
-
-
 
   const handleCountryChange = (values) => {
     if (values.country === "Other") {
@@ -81,7 +83,13 @@ const MultiStepForm = () => {
 
   return (
     <div>
-      {renderStep()}
+      {isLoading ? (
+        <div className="spinner-container">
+          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
+        </div>
+      ) : (
+        renderStep()
+      )}
       <div>
         <CustomModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} />
       </div>

@@ -97,6 +97,14 @@ button:hover{
   text-align: center;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
 @media (max-width: 768px) {
   form {
     width: 400px;
