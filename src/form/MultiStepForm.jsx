@@ -44,17 +44,18 @@ const MultiStepForm = () => {
 
   const handleSubmit = (values) => {
     setFormData({ ...formData, ...values });
-    console.log({ ...formData, ...values });
+    console.log('Submitting form data:', { ...formData, ...values });
 
     axios.post('https://muslimintech-server-pro.onrender.com/api/register', { ...formData, ...values })
       .then(response => {
-        console.log(response.data);
+        console.log('Response data:', response.data);
         navigate('/thank-you');
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
   };
+
 
 
   const handleCountryChange = (values) => {
