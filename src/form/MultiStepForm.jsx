@@ -85,7 +85,7 @@ const MultiStepForm = () => {
         <div>
             {isLoading ? (
                 <div className="spinner-container">
-                    <HashLoader size={50} color={"#123abc"} loading={isLoading} />
+                    <HashLoader size={50} color={"#DA22FF"} loading={isLoading} />
                 </div>
             ) : (
                 renderStep()
