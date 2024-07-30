@@ -130,21 +130,21 @@ const FormPage = () => {
                             <h1>Muslim in Tech - Registration</h1>
                             <div>
                                 <label>Email<span className='star'>*</span></label>
-                                <Field type="email" name="email" />
+                                <Field type="email" name="email" placeholder="Enter email" />
                                 <div className={`errorMsg ${errors.email && touched.email ? 'visible' : ''}`}>
                                     <ErrorMessage name="email" component="div" />
                                 </div>
                             </div>
                             <div>
                                 <label>First Name<span className='star'>*</span></label>
-                                <Field type="text" name="firstName" />
+                                <Field type="text" name="firstName" placeholder="Your firstname" />
                                 <div className={`errorMsg ${errors.firstName && touched.firstName ? 'visible' : ''}`}>
                                     <ErrorMessage name="firstName" component="div" />
                                 </div>
                             </div>
                             <div>
                                 <label>Last Name<span className='star'>*</span></label>
-                                <Field type="text" name="lastName" />
+                                <Field type="text" name="lastName" placeholder="Your lastname" />
                                 <div className={`errorMsg ${errors.lastName && touched.lastName ? 'visible' : ''}`}>
                                     <ErrorMessage name="lastName" component="div" />
                                 </div>
@@ -212,14 +212,14 @@ const FormPage = () => {
                                     </div>
                                     <div>
                                         <label>City/Town<span className='star'>*</span></label>
-                                        <Field type="text" name="city" />
+                                        <Field type="text" name="city" placeholder="Your city" />
                                         <div className={`errorMsg ${errors.city && touched.city ? 'visible' : ''}`}>
                                             <ErrorMessage name="city" component="div" />
                                         </div>
                                     </div>
                                     <div>
                                         <label>Postcode/Zipcode</label>
-                                        <Field type="text" name="postcode" />
+                                        <Field type="text" name="postcode" placeholder="Your zipcode" />
                                         <div className={`errorMsg ${errors.postcode && touched.postcode ? 'visible' : ''}`}>
                                             <ErrorMessage name="postcode" component="div" />
                                         </div>
@@ -254,7 +254,7 @@ const FormPage = () => {
                                             <div className='otherField'>
                                                 <Field type="radio" name="involvement" value="Other" />
                                                 <span>Other:</span>
-                                                <input type="text" value={otherInvolvement}
+                                                <input type="text" placeholder="Your answer" value={otherInvolvement}
                                                     onChange={(e) => setOtherInvolvement(e.target.value)} />
                                             </div>
                                             <div className={`errorMsg ${errors.involvement && touched.involvement ? 'visible' : ''}`}>
@@ -308,7 +308,9 @@ const FormPage = () => {
                                             <div className='otherField'>
                                                 <Field type="checkbox" name="specialties" value="Other" />
                                                 <span>Other:</span>
-                                                <input type="text"
+                                                <input
+                                                    type="text"
+                                                    placeholder="Your answer"
                                                     value={otherSpecialty}
                                                     onChange={(e) => setOtherSpecialty(e.target.value)} />
                                             </div>
@@ -319,7 +321,7 @@ const FormPage = () => {
                                     </div>
                                     <div>
                                         <label>What's the name of the person that referred you or how did you get to know about us?<span className='star'>*</span></label>
-                                        <Field type="text" name="referral" />
+                                        <Field type="text" placeholder="Your answer" name="referral" />
                                         <div className={`errorMsg ${errors.referral && touched.referral ? 'visible' : ''}`}>
                                             <ErrorMessage name="referral" component="div" />
                                         </div>
