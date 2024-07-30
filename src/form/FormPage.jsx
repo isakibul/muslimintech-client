@@ -22,7 +22,7 @@ const countryCodes = {
     Other: "",
 };
 
-const MultiStepForm = () => {
+const FormPage = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
@@ -342,4 +342,4 @@ const MultiStepForm = () => {
     );
 };
 
-export default MultiStepForm;
+export default FormPage;

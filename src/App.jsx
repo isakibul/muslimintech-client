@@ -1,14 +1,12 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import FormField from './form/MultiStepForm';
 import ThankYouPage from './form/ThankYouPage';
-import RegistrationForm from './form/RegistrationForm';
+import FormPage from './form/FormPage';
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/test' element={<RegistrationForm />} />
-        <Route path="/" element={<FormField />} />
+        <Route path='/' element={<FormPage />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
       </Routes>
     </Router>
