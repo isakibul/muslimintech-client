@@ -27,7 +27,8 @@ select {
   font-size: 15px;
   border-radius: 2px;
   border: 0;
-  border-bottom: 1px solid #dedcdc;
+  border-bottom: 1px solid #a5a8a6;
+  /* padding: 5px 8px; */
   background: transparent;
   font-family: "Rubik", sans-serif;
 }
@@ -38,6 +39,12 @@ select:focus {
   outline: none;
   border-color: #DA22FF;
   background: transparent;
+}
+
+.star{
+  margin-left: 3px;
+  color: red;
+  font-size: 17px;
 }
 
 button {
@@ -63,6 +70,7 @@ button:hover{
 .errorMsg {
   color: red;
   min-height: 20px;
+  font-size: 14px;
   visibility: hidden;
 }
 
@@ -87,6 +95,16 @@ button:hover{
 
 .no-scroll {
   overflow: hidden;
+}
+
+.otherField{
+  display: flex;
+  align-items: center;
+}
+
+.otherField span{
+  transform: translateY(2px);
+  margin-right: 10px;
 }
 
 .modal p{

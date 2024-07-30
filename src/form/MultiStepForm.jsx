@@ -8,12 +8,14 @@ import axios from 'axios';
 import { HashLoader } from 'react-spinners';
 
 const countryProvinces = {
+    USA: ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"],
     Australia: ["ACT", "New South Wales", "Northern Territory", "Queensland", "South Australia", "Tasmania", "Victoria", "Western Australia"],
     Canada: ["Alberta", "British Columbia", "Manitoba", "New Brunswick", "Newfoundland and Labrador", "Nova Scotia", "Ontario", "Prince Edward Island", "Quebec", "Saskatchewan", "Northwest Territories", "Nunavut", "Yukon"],
     NewZealand: ["Northland", "Auckland", "Waikato", "Bay of Plenty", "Gisborne", "Hawke's Bay", "Taranaki", "Manawatū-Whanganui", "Wellington", "Tasman", "Nelson", "Marlborough", "West Coast", "Canterbury", "Otago", "Southland"]
 };
 
 const countryCodes = {
+    USA: "+1",
     Australia: "+61",
     Canada: "+1",
     NewZealand: "+64",
@@ -37,18 +39,19 @@ const MultiStepForm = () => {
     });
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email("Invalid email").required("Required"),
-        firstName: Yup.string().required("Required"),
-        lastName: Yup.string().required("Required"),
-        country: Yup.string().required("Required"),
+        email: Yup.string().email("Invalid email").required("This field is required"),
+        firstName: Yup.string().min(2, "First name must be at least 2 characters").required("This field is required"),
+        lastName: Yup.string().min(2, "Last name must be at least 2 characters").required("This field is required"),
+        country: Yup.string().required("This field is required"),
         mobileNumber: Yup.string()
-            .matches(/^\d+$/, "Mobile number must be numeric")
-            .required("Required"),
-        province: Yup.string().required("Required"),
-        city: Yup.string().required("Required"),
-        involvement: Yup.string().required("Required"),
-        specialties: Yup.array().min(1, "Select at least one specialty"),
-        referral: Yup.string().required("Required"),
+            .matches(/^\d{9,10}$/, "Please enter a valid mobile number")
+            .required("This field is required"),
+        province: Yup.string().required("This field is required"),
+        city: Yup.string().min(2, "City name must be at least 2 characters").required("This field is required"),
+        postcode: Yup.string().matches(/^\d{4,10}$/, "Postcode must be between 4 and 10 digits").notRequired(),
+        involvement: Yup.string().required("This field is required"),
+        specialties: Yup.array().of(Yup.string()).min(1, "Select at least one specialty").required("This field is required"),
+        referral: Yup.string().min(2, "Referral must be at least 2 characters").required("This field is required"),
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -63,13 +66,31 @@ const MultiStepForm = () => {
         }
     }, [modalIsOpen]);
 
-    const handleSubmit = (values) => {
-        const fullPhoneNumber = `${countryCodes[values.country]}${values.mobileNumber}`;
-        setFormData({ ...formData, ...values, mobileNumber: fullPhoneNumber });
-        setIsLoading(true);
-        console.log('Submitting form data:', { ...formData, ...values, mobileNumber: fullPhoneNumber });
+    const [otherSpecialty, setOtherSpecialty] = useState('');
+    const [otherInvolvement, setOtherInvolvement] = useState('');
 
-        axios.post('https://muslimintech-server.onrender.com/api/register', { ...formData, ...values, mobileNumber: fullPhoneNumber })
+    const handleSubmit = (values) => {
+        let involvement = values.involvement;
+
+        if (involvement === "Other") {
+            involvement = otherInvolvement;
+        }
+
+        let specialties = [...values.specialties];
+
+        specialties = specialties.filter(specialty => specialty !== "Other");
+
+        if (otherSpecialty) {
+            specialties.push(otherSpecialty);
+        }
+
+        const fullPhoneNumber = `${countryCodes[values.country]}${values.mobileNumber}`;
+
+        setFormData({ ...formData, ...values, specialties, mobileNumber: fullPhoneNumber, involvement });
+        setIsLoading(true);
+        console.log('Submitting form data:', { ...formData, ...values, specialties, mobileNumber: fullPhoneNumber, involvement });
+
+        axios.post('https://muslimintech-server.onrender.com/api/register', { ...formData, ...values, specialties, mobileNumber: fullPhoneNumber })
             .then(response => {
                 console.log('Response data:', response.data);
                 navigate('/thank-you');
@@ -79,6 +100,8 @@ const MultiStepForm = () => {
                 setIsLoading(false);
             });
     };
+
+
 
     const handleCountryChange = (values) => {
         if (values.country === "Other") {
@@ -100,53 +123,47 @@ const MultiStepForm = () => {
                     validationSchema={validationSchema}
                     validateOnChange={true}
                     validateOnBlur={true}
-                    onSubmit={(values, { setSubmitting, validateForm }) => {
-                        validateForm().then(errors => {
-                            if (Object.keys(errors).length === 0) {
-                                handleSubmit(values);
-                            } else {
-                                alert("Please fill out all the required fields.");
-                                setSubmitting(false);
-                            }
-                        });
-                    }}
+                    onSubmit={handleSubmit}
                 >
                     {({ isValid, errors, touched, values, setFieldValue }) => (
                         <Form>
                             <h1>Muslim in Tech - Registration</h1>
                             <div>
-                                <label>Email</label>
+                                <label>Email<span className='star'>*</span></label>
                                 <Field type="email" name="email" />
                                 <div className={`errorMsg ${errors.email && touched.email ? 'visible' : ''}`}>
                                     <ErrorMessage name="email" component="div" />
                                 </div>
                             </div>
                             <div>
-                                <label>First Name</label>
+                                <label>First Name<span className='star'>*</span></label>
                                 <Field type="text" name="firstName" />
                                 <div className={`errorMsg ${errors.firstName && touched.firstName ? 'visible' : ''}`}>
                                     <ErrorMessage name="firstName" component="div" />
                                 </div>
                             </div>
                             <div>
-                                <label>Last Name</label>
+                                <label>Last Name<span className='star'>*</span></label>
                                 <Field type="text" name="lastName" />
                                 <div className={`errorMsg ${errors.lastName && touched.lastName ? 'visible' : ''}`}>
                                     <ErrorMessage name="lastName" component="div" />
                                 </div>
                             </div>
                             <div className="select-container">
-                                <label>Country</label>
-                                <Field as="select" name="country" onChange={(e) => {
-                                    handleCountryChange({ ...values, country: e.target.value });
-                                    setFieldValue('country', e.target.value);
-                                }}>
-                                    <option value="" disabled>Select Country</option>
-                                    <option value="Australia">Australia</option>
-                                    <option value="Canada">Canada</option>
-                                    <option value="NewZealand">New Zealand</option>
-                                    <option value="Other">Other</option>
-                                </Field>
+                                <label>Country<span className='star'>*</span></label>
+                                <div>
+                                    <Field as="select" name="country" onChange={(e) => {
+                                        handleCountryChange({ ...values, country: e.target.value });
+                                        setFieldValue('country', e.target.value);
+                                    }}>
+                                        <option value="" disabled>Select Country</option>
+                                        <option value="USA">USA</option>
+                                        <option value="Australia">Australia</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="NewZealand">New Zealand</option>
+                                        <option value="Other">Other</option>
+                                    </Field>
+                                </div>
                                 <div className={`errorMsg ${errors.country && touched.country ? 'visible' : ''}`}>
                                     <ErrorMessage name="country" component="div" />
                                 </div>
@@ -154,7 +171,7 @@ const MultiStepForm = () => {
                             {values.country !== "Other" && isCountrySelected && (
                                 <>
                                     <div>
-                                        <label>Mobile Number</label>
+                                        <label>Mobile Number<span className='star'>*</span></label>
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                             <Field
                                                 type="text"
@@ -182,7 +199,7 @@ const MultiStepForm = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label>Province/Territory</label>
+                                        <label>Province/Territory<span className='star'>*</span></label>
                                         <Field as="select" name="province">
                                             <option value="" disabled>Select Province/Territory</option>
                                             {countryProvinces[values.country]?.map((province, index) => (
@@ -194,7 +211,7 @@ const MultiStepForm = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label>City/Town</label>
+                                        <label>City/Town<span className='star'>*</span></label>
                                         <Field type="text" name="city" />
                                         <div className={`errorMsg ${errors.city && touched.city ? 'visible' : ''}`}>
                                             <ErrorMessage name="city" component="div" />
@@ -212,7 +229,7 @@ const MultiStepForm = () => {
                             {values.country !== "Other" && isCountrySelected && (
                                 <>
                                     <div className="involvement">
-                                        <label>What is your involvement in tech?</label>
+                                        <label>What is your involvement in tech?<span className='star'>*</span></label>
                                         <div className="involvement-div">
                                             <div>
                                                 <Field type="radio" name="involvement" value="Student" />
@@ -234,9 +251,11 @@ const MultiStepForm = () => {
                                                 <Field type="radio" name="involvement" value="Simply interested" />
                                                 Simply interested
                                             </div>
-                                            <div>
+                                            <div className='otherField'>
                                                 <Field type="radio" name="involvement" value="Other" />
-                                                Other
+                                                <span>Other:</span>
+                                                <input type="text" value={otherInvolvement}
+                                                    onChange={(e) => setOtherInvolvement(e.target.value)} />
                                             </div>
                                             <div className={`errorMsg ${errors.involvement && touched.involvement ? 'visible' : ''}`}>
                                                 <ErrorMessage name="involvement" component="div" />
@@ -244,7 +263,7 @@ const MultiStepForm = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label>What's your tech specialty/interest?</label>
+                                        <label>What's your tech specialty/interest?<span className='star'>*</span></label>
                                         <div className="interest-div">
                                             <div>
                                                 <Field type="checkbox" name="specialties" value="Software Engineering" />
@@ -286,9 +305,12 @@ const MultiStepForm = () => {
                                                 <Field type="checkbox" name="specialties" value="Product Management" />
                                                 Product Management
                                             </div>
-                                            <div>
+                                            <div className='otherField'>
                                                 <Field type="checkbox" name="specialties" value="Other" />
-                                                Other
+                                                <span>Other:</span>
+                                                <input type="text"
+                                                    value={otherSpecialty}
+                                                    onChange={(e) => setOtherSpecialty(e.target.value)} />
                                             </div>
                                             <div className={`errorMsg ${errors.specialties && touched.specialties ? 'visible' : ''}`}>
                                                 <ErrorMessage name="specialties" component="div" />
@@ -296,7 +318,7 @@ const MultiStepForm = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label>What's the name of the person that referred you or how did you get to know about us?</label>
+                                        <label>What's the name of the person that referred you or how did you get to know about us?<span className='star'>*</span></label>
                                         <Field type="text" name="referral" />
                                         <div className={`errorMsg ${errors.referral && touched.referral ? 'visible' : ''}`}>
                                             <ErrorMessage name="referral" component="div" />
@@ -304,11 +326,11 @@ const MultiStepForm = () => {
                                     </div>
                                 </>
                             )}
-                            <div className="buttons-div">
-                                <button type="submit" disabled={!isValid}>
-                                    Submit
-                                </button>
-                            </div>
+
+                            <span style={{ color: 'red' }}>* singed fields are required</span>
+                            <button type="submit">
+                                Submit
+                            </button>
                         </Form>
                     )}
                 </Formik >
