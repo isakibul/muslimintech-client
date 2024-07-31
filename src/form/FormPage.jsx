@@ -69,37 +69,47 @@ const FormPage = () => {
     const [otherSpecialty, setOtherSpecialty] = useState('');
     const [otherInvolvement, setOtherInvolvement] = useState('');
 
-    const handleSubmit = (values) => {
-        let involvement = values.involvement;
+    const handleSubmit = async (values) => {
+        let { involvement, specialties, country, mobileNumber, ...rest } = values;
 
+        // Handle custom involvement if 'Other' is selected
         if (involvement === "Other") {
-            involvement = otherInvolvement;
+            involvement = otherInvolvement;  // Ensure 'otherInvolvement' is defined
         }
 
-        let specialties = [...values.specialties];
-
+        // Filter out 'Other' from specialties and add the custom specialty if provided
         specialties = specialties.filter(specialty => specialty !== "Other");
-
         if (otherSpecialty) {
-            specialties.push(otherSpecialty);
+            specialties.push(otherSpecialty);  // Ensure 'otherSpecialty' is defined
         }
 
-        const fullPhoneNumber = `${countryCodes[values.country]}${values.mobileNumber}`;
+        // Combine country code with mobile number
+        const fullPhoneNumber = `${countryCodes[country]}${mobileNumber}`;
 
-        setFormData({ ...formData, ...values, specialties, mobileNumber: fullPhoneNumber, involvement });
+        // Prepare final form data
+        const formData = {
+            ...rest,
+            country,
+            mobileNumber: fullPhoneNumber,
+            involvement,
+            specialties
+        };
+
+        // Logging and submitting form data
+        setFormData(formData);
         setIsLoading(true);
-        console.log('Submitting form data:', { ...formData, ...values, specialties, mobileNumber: fullPhoneNumber, involvement });
+        console.log('Submitting form data:', formData);
 
-        axios.post('https://muslimintech-server.onrender.com/api/register', { ...formData, ...values, specialties, mobileNumber: fullPhoneNumber, involvement })
-            .then(response => {
-                console.log('Response data:', response.data);
-                navigate('/thank-you');
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-                setIsLoading(false);
-            });
+        try {
+            const response = await axios.post('https://muslimintech-server.onrender.com/api/register', formData);
+            console.log('Response data:', response.data);
+            navigate('/thank-you');
+        } catch (error) {
+            console.error('There was an error!', error);
+            setIsLoading(false);
+        }
     };
+
 
 
     const handleCountryChange = (values) => {
