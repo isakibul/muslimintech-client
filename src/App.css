@@ -157,6 +157,7 @@ button:hover{
     padding: 30px;
   }
   input[type="text"],
+  input[type="email"],
   select{
     font-size: 12px;
   }
