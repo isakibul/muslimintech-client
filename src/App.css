@@ -137,6 +137,7 @@ button:hover{
   }
 }
 
+/* -----responsive css----- */
 @media (max-width: 530px) {
   form {
     width: 380px;

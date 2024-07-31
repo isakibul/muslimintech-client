@@ -90,7 +90,7 @@ const FormPage = () => {
         setIsLoading(true);
         console.log('Submitting form data:', { ...formData, ...values, specialties, mobileNumber: fullPhoneNumber, involvement });
 
-        axios.post('https://muslimintech-server.onrender.com/api/register', { ...formData, ...values, specialties, mobileNumber: fullPhoneNumber })
+        axios.post('https://muslimintech-server.onrender.com/api/register', { ...formData, ...values, specialties, mobileNumber: fullPhoneNumber, involvement })
             .then(response => {
                 console.log('Response data:', response.data);
                 navigate('/thank-you');
@@ -100,7 +100,6 @@ const FormPage = () => {
                 setIsLoading(false);
             });
     };
-
 
 
     const handleCountryChange = (values) => {
@@ -224,10 +223,6 @@ const FormPage = () => {
                                             <ErrorMessage name="postcode" component="div" />
                                         </div>
                                     </div>
-                                </>
-                            )}
-                            {values.country !== "Other" && isCountrySelected && (
-                                <>
                                     <div className="involvement">
                                         <label>What is your involvement in tech?<span className='star'>*</span></label>
                                         <div className="involvement-div">
