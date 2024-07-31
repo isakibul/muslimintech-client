@@ -72,21 +72,17 @@ const FormPage = () => {
     const handleSubmit = async (values) => {
         let { involvement, specialties, country, mobileNumber, ...rest } = values;
 
-        // Handle custom involvement if 'Other' is selected
         if (involvement === "Other") {
-            involvement = otherInvolvement;  // Ensure 'otherInvolvement' is defined
+            involvement = otherInvolvement;
         }
 
-        // Filter out 'Other' from specialties and add the custom specialty if provided
         specialties = specialties.filter(specialty => specialty !== "Other");
         if (otherSpecialty) {
-            specialties.push(otherSpecialty);  // Ensure 'otherSpecialty' is defined
+            specialties.push(otherSpecialty);
         }
 
-        // Combine country code with mobile number
         const fullPhoneNumber = `${countryCodes[country]}${mobileNumber}`;
 
-        // Prepare final form data
         const formData = {
             ...rest,
             country,
@@ -95,7 +91,6 @@ const FormPage = () => {
             specialties
         };
 
-        // Logging and submitting form data
         setFormData(formData);
         setIsLoading(true);
         console.log('Submitting form data:', formData);
@@ -109,6 +104,7 @@ const FormPage = () => {
             setIsLoading(false);
         }
     };
+
 
 
 
