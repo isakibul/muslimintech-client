@@ -102,6 +102,7 @@ const FormPage = () => {
         } catch (error) {
             console.error('There was an error!', error);
             setIsLoading(false);
+            navigate('/error');
         }
     };
 
